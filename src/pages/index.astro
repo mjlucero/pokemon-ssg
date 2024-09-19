@@ -1,16 +1,24 @@
 ---
+import { getPokemons } from '../services/pokemon.service';
 
+import MainLayout from '../layouts/MainLayout.astro';
+import PokemonCard from '../components/PokemonCard.astro';
+
+const pokemonData = await getPokemons();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="Pokemon SSG | Home">
+  <h1 class="text-3xl">Pokemon List</h1>
+  <hr />
+
+  <section
+    aria-label="Pokemon List"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mt-5 gap-4"
+  >
+    {
+      pokemonData.results.map(({ name, url }) => (
+        <PokemonCard name={name} url={url} />
+      ))
+    }
+  </section>
+</MainLayout>
