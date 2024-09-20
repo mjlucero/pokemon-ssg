@@ -1,0 +1,37 @@
+---
+const links = [
+  { href: '/', baseUrl: '', text: 'All' },
+  { href: '/pokemons/1', baseUrl: 'pokemons', text: 'Paginated' },
+  { href: '/favorites', baseUrl: 'favorites', text: 'Favorites' },
+];
+
+const currentPath = Astro.url.pathname.split('/').at(1) ?? '';
+---
+
+<nav class="shadow bg-slate-800">
+  <div
+    class="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300"
+  >
+    {
+      links.map(({ href, baseUrl, text }) => (
+        <div>
+          <a
+            href={href}
+            class="text-gray-800 dark:text-gray-200  mx-1.5 sm:mx-6 "
+          >
+            {text}
+          </a>
+
+          {currentPath === baseUrl ? (
+            <div
+              transition:name="active-menu"
+              class="border-b-2 border-blue-500"
+            />
+          ) : (
+            <div class="border-b-2 border-transparent" />
+          )}
+        </div>
+      ))
+    }
+  </div>
+</nav>

@@ -1,0 +1,55 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getPokemons } from '@/services/pokemon.service';
+
+import MainLayout from '@/layouts/MainLayout.astro';
+import PokemonCard from '@/components/PokemonCard.astro';
+import Title from '@/components/Title.astro';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const { results } = await getPokemons();
+
+  return paginate(results, { pageSize: 20 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<MainLayout title="Pokemon SSG | Home">
+  <Title>Paginated Pokemons</Title>
+
+  <section
+    aria-label="Pokemon List"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mt-5 gap-4"
+  >
+    {page.data.map(({ name, url }) => <PokemonCard name={name} url={url} />)}
+  </section>
+
+  <footer class="flex my-10 gap-10 items-center justify-center">
+    <a
+      class:list={[
+        'pagination-btn',
+        { 'pagination-btn--disabled': !page.url.prev },
+      ]}
+      href={page.url.prev}>Previous</a
+    >
+    <span class="text-xl font-bold"> Page {page.currentPage}</span>
+    <a
+      class:list={[
+        'pagination-btn',
+        { 'pagination-btn--disabled': !page.url.next },
+      ]}
+      href={page.url.next}>Next</a
+    >
+  </footer>
+</MainLayout>
+
+<style>
+  .pagination-btn {
+    @apply bg-blue-500 p-2 text-white rounded-md;
+  }
+
+  .pagination-btn--disabled {
+    @apply bg-gray-600 text-gray-400;
+  }
+</style>

@@ -1,9 +1,14 @@
 ---
+import NavBar from '@/components/NavBar.astro';
+import { ViewTransitions } from 'astro:transitions';
+
 type Props = {
   title: string;
+  description?: string;
+  image?: string;
 };
 
-const { title } = Astro.props;
+const { title, description, image } = Astro.props;
 ---
 
 <html lang="en">
@@ -12,10 +17,26 @@ const { title } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO -->
+    <meta name="description" content={description} />
+    <meta name="author" content="Mauricio Lucero" />
+
+    <!-- OG MetaTags -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+
     <title>{title}</title>
+
+    <ViewTransitions />
   </head>
-  <body class="bg-slate-800 text-slate-100 m-auto max-w-3xl">
-    <main class="mt-10">
+  <body class="bg-slate-800 text-slate-100">
+    <header>
+      <NavBar />
+    </header>
+
+    <main class="mt-10 m-auto max-w-3xl px-4">
       <slot />
     </main>
   </body>

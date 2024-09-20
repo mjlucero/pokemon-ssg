@@ -3,13 +3,13 @@ import { getPokemons } from '../services/pokemon.service';
 
 import MainLayout from '../layouts/MainLayout.astro';
 import PokemonCard from '../components/PokemonCard.astro';
+import Title from '@/components/Title.astro';
 
 const pokemonData = await getPokemons();
 ---
 
 <MainLayout title="Pokemon SSG | Home">
-  <h1 class="text-3xl">Pokemon List</h1>
-  <hr />
+  <Title>All Pokemons</Title>
 
   <section
     aria-label="Pokemon List"
