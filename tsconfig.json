@@ -1,9 +1,13 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": "/Users/mlucero/Documents/dev/pokemon-ssg/src",
     "paths": {
-      "@/*": ["./*"],
-    }
+      "@/*": [
+        "./*"
+      ]
+    },
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
   }
 }

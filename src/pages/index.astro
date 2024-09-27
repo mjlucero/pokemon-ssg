@@ -13,7 +13,7 @@ const pokemonData = await getPokemons();
 
   <section
     aria-label="Pokemon List"
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mt-5 gap-4"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mt-5 gap-4"
   >
     {
       pokemonData.results.map(({ name, url }) => (

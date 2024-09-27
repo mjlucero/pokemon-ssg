@@ -4,6 +4,8 @@ import type { GetStaticPaths } from 'astro';
 import MainLayout from '@/layouts/MainLayout.astro';
 import PokemonCard from '@/components/PokemonCard.astro';
 import { getPokemons } from '@/services/pokemon.service';
+import HeartIconFilled from '@/components/icons/HeartIconFilled.astro';
+import HeartIcon from '@/components/icons/HeartIcon.astro';
 
 export const getStaticPaths = (async () => {
   const { results } = await getPokemons();
@@ -28,9 +30,16 @@ const imgSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites
   image={imgSrc}
 >
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
-    <header>
-      <a href="/">Back</a>
-      <h1 class="text-5xl capitalize">{name}</h1>
+    <header class="flex flex-row gap-3">
+      <div>
+        <a href="/">Back</a>
+        <h1 class="text-5xl capitalize">{name}</h1>
+      </div>
+
+      <button id="favorite-btn" data-id={pokemonId} data-name={name}>
+        <HeartIcon id="heart-icon" />
+        <HeartIconFilled class="hidden" id="heart-filled-icon" />
+      </button>
     </header>
 
     <PokemonCard name={name} url={url} isDetail />
@@ -46,4 +55,63 @@ const imgSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites
   a {
     @apply hover:underline text-blue-500;
   }
+
+  #favorite-btn {
+    @apply text-red-500 stroke-red-500 hover:animate-pulse;
+  }
 </style>
+
+<script>
+  import {
+    addFavoritePokemon,
+    getPokemonById,
+    removeFavoritePokemon,
+  } from '@/services/indexDB.service';
+
+  const handlePageLoad = async () => {
+    const favoriteBtnEl = document.getElementById('favorite-btn');
+
+    if (!favoriteBtnEl) {
+      return;
+    }
+
+    const id = favoriteBtnEl.dataset.id;
+    const name = favoriteBtnEl.dataset.name;
+
+    const heartIcon = document.getElementById('heart-icon');
+    const heartFilledIcon = document.getElementById('heart-filled-icon');
+
+    if (!id || !name) {
+      return;
+    }
+
+    const isFavorite = await getPokemonById(id);
+
+    if (isFavorite) {
+      heartIcon?.classList.add('hidden');
+      heartFilledIcon?.classList.remove('hidden');
+    }
+
+    const toggleFavorite = async () => {
+      const isFavorite = await getPokemonById(id);
+
+      if (!isFavorite) {
+        heartIcon?.classList.add('hidden');
+        heartFilledIcon?.classList.remove('hidden');
+
+        addFavoritePokemon({ id, name });
+
+        return;
+      }
+
+      heartIcon?.classList.remove('hidden');
+      heartFilledIcon?.classList.add('hidden');
+
+      removeFavoritePokemon(id);
+    };
+
+    favoriteBtnEl.addEventListener('click', toggleFavorite);
+  };
+
+  document.addEventListener('astro:page-load', handlePageLoad);
+</script>

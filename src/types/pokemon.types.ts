@@ -9,3 +9,8 @@ export type PokemonListResponse = {
   previous: string;
   results: PokemonItem[];
 };
+
+export type FavoritePokemon = {
+  id: string;
+  name: string;
+};
